@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-my $hostname = `/bin/hostname -s`;
+my $hostname = `/bin/hostname`;
 chomp($hostname);
 my $hbstatus = `/usr/bin/cl_status hbstatus`;
 chomp($hbstatus);
@@ -9,7 +9,7 @@ if ($hbstatus =~ m/Heartbeat is running/) {
 	my $msg = "";
 	my $isbad = 0;
 
-	my $nodestatus = `cl_status nodestatus $hostname 2>/dev/null`;
+	my $nodestatus = `/usr/bin/cl_status nodestatus $hostname 2>/dev/null`;
 	chomp($nodestatus);
 	$msg .= "$hostname is $nodestatus. ";
 	if ($nodestatus ne 'active') {
