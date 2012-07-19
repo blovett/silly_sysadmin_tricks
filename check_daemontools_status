@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+# nagios plugin to check daemontools service run status
+
+def service_status(name)
+	output = %x{svstat /service/#{name}}
+	match = /^\s+(\w+)/.match(output.split(":")[1])
+
+	state = match[1]
+
+	return {:state => state}
+end
+
+def main
+	service=ARGV[0]
+	unless service.nil?
+		results = service_status(service)
+
+		if results[:state] == "up"
+			puts "OK daemontools service #{service} is up"
+			exit 0
+		else
+			puts "CRITCAL daemontools service #{service} is down"
+			exit 2
+		end
+	else
+		puts "UNKNOWN service name not passed."
+		exit 3
+	end
+end
+
+main
+
+# vim:ft=ruby
