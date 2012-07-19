@@ -3,7 +3,8 @@
 # nagios plugin to check daemontools service run status
 
 def service_status(name)
-	output = %x{svstat /service/#{name}}
+  service_dir = File.directory?("/service") ? "/service" : "/etc/service"
+	output = %x{svstat #{service_dir}/#{name}}
 	match = /^\s+(\w+)/.match(output.split(":")[1])
 
 	state = match[1]
